@@ -24,26 +24,27 @@
             hover:-translate-y-1 hover:scale-105 hover:bg-[#8b5cf6] 
             duration-300" href="./home.html">HOME</a>
             <a class="p-1.5 rounded border-2 border-black bg-[#8b5cf6] font-bold " 
-            href="">MOVIES</a>
+            href="#">MOVIES</a>
             <a class="p-1.5 rounded text-white transition ease-in-out delay-150  
             hover:-translate-y-1 hover:scale-110 hover:bg-[#8b5cf6] 
-            duration-300" href="#">FAVS</a>
+            duration-300" href="./favs.html">FAVS</a>
         </nav>
     </header>
-    <main>
-        <article class="flex justify-center  bg-[#8b5cf6]  mt-5">
+    <main class="min-h-[77vh]">
+        <article class="flex justify-center  bg-[#8b5cf6] mt-5 mr-5 ml-5 rounded-md">
             <div class=" p-10 ">
                 <h1 class="text-2xl font-bold">Movies</h1>
             </div>
         </article>
+
         <section>
-            <div class="flex  pt-5 justify-center gap-5">
-                <select id="filterOfGenres" class="bg-[#8b5cf6] text-white text-center border-2 border-black md:w-[20%]">
+            <div class="flex  pt-5 justify-center gap-10 ">
+                <select id="filterOfGenres" class="bg-[#8b5cf6] text-white text-center border-2 border-black md:w-[40%] rounded-md">
                     <option value="">Select a genre</option>
                   </select>
-                  <input id="search" type="search" placeholder="Search..." class=" border-2 border-black md:w-[20%]">
-                </div>
-            <div id="contenedorMovies"></div>
+                  <input id="ctn-search" type="search" placeholder="Search..." class="md:w-[40%]  px-4 py-1 rounded-md ">
+            </div>
+            <div id="ctn" class="flex flex-wrap gap-10 justify-center mt-8"></div>
         </section>
 
     </main>
@@ -51,7 +52,6 @@
     <footer class="flex items-center justify-center bg-[#8b5cf6] text-white mt-7 p-4">
         <p>MindHub - Cohort N° 54</p>
 </footer>
-    <script src="./data.js"></script>
     <script type="module" src="./moviesmodule.js"></script>
 </body>
 </html>

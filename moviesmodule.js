@@ -1,34 +1,67 @@
 //IMPORTACIONES
-import {createSelectOptions, generateCardsMovies, filterByGenres, filterBySearch } from './function.js';
+import { getGenres, createSelectOptions, renderMovies, crossFilters } from "./function.js"
 
 //CAPTURAS DEL DOM
-let contenedorMovies = document.getElementById("contenedorMovies");
-contenedorMovies.className = "flex flex-wrap gap-10 justify-center pt-5 "
- let filterOfGenres = document.getElementById("filterOfGenres");
- let  search = document.getElementById("search");
+let ctn = document.getElementById("ctn")
+let filterOfGenres = document.getElementById("filterOfGenres")
+let ctnSearch = document.getElementById("ctn-search")
 
 //VARIABLES
-//Combino todos los generos en un solo arreglo
-let allGenres = movies.reduce((a, movie) => a.concat(movie.genres), []); 
-//Creo un Set para eliminar los duplicados y convierto el Set en un arreglo
-let uniqueGenres = Array.from(new Set(allGenres));
-console.log(uniqueGenres);
-//declaro variable con string vacios
 let optionSelected = ""
 let nameInput = ""
+let arrayFavorites = []
+let lSArray = JSON.parse(localStorage.getItem('Favorites'))
+if (lSArray) {
+    arrayFavorites = lSArray
+}
 
-//LLAMADO A FUNCIONES
-createSelectOptions(uniqueGenres, filterOfGenres); //crea y añade las opciones de genero al select.
-generateCardsMovies(movies) //genera y muestra las cards.
+//API
+fetch('https://moviestack.onrender.com/api/movies', {
+    headers: {
+        'x-api-key': '0ff70d54-dc0b-4262-9c3d-776cb0f34dbd'
+    }
+})
+    .then(res => res.json())
+    .then(data => {
+        let movies = data.movies
+        console.log(movies)
+        renderMovies(movies, ctn, arrayFavorites)
 
-//EVENT LISTENER
-//escucha mi select mediante el change (cuando el usuario confirma algo)
-filterOfGenres.addEventListener("change", e =>{
-    optionSelected = e.target.value     
-    contenedorMovies.innerHTML= generateCardsMovies(filterBySearch(filterByGenres(movies, optionSelected),nameInput) )
-    })
-//escucha mi busqueda mediante el keyup(cuando el usuario suelta la tecla)
-search.addEventListener("keyup", e =>{
-    nameInput = e.target.value
-    contenedorMovies.innerHTML = generateCardsMovies(filterBySearch(filterByGenres(movies, optionSelected), nameInput))      
+        let uniqueGenres = getGenres(movies)
+        createSelectOptions(uniqueGenres, filterOfGenres)
+
+        ctnSearch.addEventListener('keyup', e => {
+            nameInput = e.target.value
+            console.log(nameInput)
+            let filterSearch = crossFilters(movies, nameInput, optionSelected)
+            renderMovies(filterSearch, ctn, arrayFavorites)
+            console.log(filterSearch)
+        })
+
+        filterOfGenres.addEventListener('change', e => {
+            optionSelected = e.target.value
+            console.log(optionSelected)
+            let filterGenres = crossFilters(movies, nameInput, optionSelected)
+            renderMovies(filterGenres, ctn, arrayFavorites)
+            console.log(filterGenres)
+        })
+
+        ctn.addEventListener('click', e => {
+            let datasetMovieId = e.target.dataset.movieId
+            if (datasetMovieId) {
+                console.log('es un boton')
+                console.log(datasetMovieId)
+                if (!arrayFavorites.includes(datasetMovieId)) {
+                    arrayFavorites.push(datasetMovieId)
+
+                } else {
+                    arrayFavorites = arrayFavorites.filter(id => id != datasetMovieId)
+                }
+                localStorage.setItem('Favorites', JSON.stringify(arrayFavorites))
+            }
+
+            console.log(arrayFavorites)
+            renderMovies(movies, ctn, arrayFavorites)
+        })
+
     })
